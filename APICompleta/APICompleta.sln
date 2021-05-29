@@ -7,10 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevIO.Business", "src\DevIO
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevIO.Data", "src\DevIO.Data\DevIO.Data.csproj", "{1B0DC423-77E3-4C48-AADC-C29875B47B37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevIO.Api", "src\DevIO.Api\DevIO.Api.csproj", "{A80EA7DD-ADA0-474A-841E-1331E9217C3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevIO.Api", "src\DevIO.Api\DevIO.Api.csproj", "{A80EA7DD-ADA0-474A-841E-1331E9217C3D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Referência Desenvolvimento", "Referência Desenvolvimento", "{BDAE993E-EEF8-48BB-BD38-79A57C29F035}"
 	ProjectSection(SolutionItems) = preProject
+		Conexões.txt = Conexões.txt
 		Criando uma API Core 5.0 completa.txt = Criando uma API Core 5.0 completa.txt
 	EndProjectSection
 EndProject

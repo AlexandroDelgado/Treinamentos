@@ -158,3 +158,198 @@
 						public string NomeFornecdor { get; set; }
 					}
 				}
+
+	4) Setup - Controllers e Startup (Criando as controllers)
+
+		4.1) Abra a pasta "Controllers" e renomeie o arquivo "WeatherForecastController.cs" para "MainController.cs".
+
+		4.1.2) Altere o seu contéudo pelo código abaixo:
+
+			using Microsoft.AspNetCore.Mvc;
+
+			namespace DevIO.Api.Controllers
+			{
+				[ApiController]
+				public abstract class MainController : ControllerBase
+				{
+					// Validações das notificações de erro
+
+					// Validação de Modelstate
+
+					// validação da operação de negócios
+        
+				}
+			}
+
+		4.2) Crie uma Controller chamada: "FornecedoresController", e insira o código abaixo:
+
+			using DevIO.Api.Controllers;
+			using DevIO.Api.ViewModel;
+			using DevIO.Business.Intefaces;
+			using Microsoft.AspNetCore.Mvc;
+			using System.Collections.Generic;
+			using System.Threading.Tasks;
+
+			namespace DevIO.Api.Controllers
+			{
+				[Route("api/[controller]")]
+				public class FornecedoresController : MainController
+				{
+					// declara o objeto para a inversão de dependência
+					private readonly IFornecedorRepository _fornecedorRepository;
+
+					// cria o construtor para a inversão de dependência
+					public FornecedoresController(IFornecedorRepository fornecedorRepository)
+					{
+						_fornecedorRepository = fornecedorRepository;
+					}
+
+					// Retorna uma lista de fornecedores
+					public async Task<ActionResult<IEnumerable<FornecedorViewModel>>> ObterTodos()
+					{
+
+						var fornecedor = await _fornecedorRepository.ObterTodos();
+
+						return Ok();
+					}
+				}
+			}
+
+		4.3) Adicionando o mapeamento.
+		
+			4.2.3) No "Console do gerenciador de Pacotes) digite: "install-package AutoMapper.Extensions.Microsoft.DependencyInjection" e clique e aperte enter,
+				para fazer a instalação da extensão da inversão de dependência do automaper.
+
+			4.2.3) Abra o arquivo "Startup.cs" e dentro do método "ConfigureServices", adicione a extensão do método Mapper, conforme o código abaixo:
+
+				// Adiciona a extensão do método AutoMapper
+	            services.AddAutoMapper(typeof(Startup));
+
+		4.4) Criando uma lista de: Dê - Para.
+
+			4.4.1) Em "DevIO.Api", crie uma nova pasta chamada "Configuration".
+
+			4.4.2) Crie uma classe chamada "AutomapperConfig.cs" dentro da pasta "Configurations" e insira o código abaixo:
+
+				using AutoMapper;
+				using DevIO.Api.ViewModel;
+				using DevIO.Business.Models;
+
+				namespace DevIO.Api.Configurations
+				{
+					// Essa classe herda a classe Profile, pertencente ao Automapper
+					public class AutomapperConfig : Profile
+					{
+						// Contrutor da configuração de mapeamento
+						public AutomapperConfig()
+						{
+							// Faz o mapeamento das classes
+							CreateMap<Fornecedor, FornecedorViewModel>().ReverseMap(); // Caso não seja necessário usar parametros, utilize o ".ReversMap()".
+							CreateMap<Endereco, EnderecoViewModel>().ReverseMap();
+							CreateMap<Produto, ProdutoViewModel>().ReverseMap();
+						}
+					}
+				}
+
+		4.5) Abra a Controller "FornecedoresController", e altere pelo código abaixo:
+
+			using AutoMapper;
+			using DevIO.Api.ViewModel;
+			using DevIO.Business.Intefaces;
+			using Microsoft.AspNetCore.Mvc;
+			using System.Collections.Generic;
+			using System.Threading.Tasks;
+
+			namespace DevIO.Api.Controllers
+			{
+				[Route("api/[controller]")]
+				public class FornecedoresController : MainController
+				{
+					// declara o objeto para a inversão de dependência
+					private readonly IFornecedorRepository _fornecedorRepository;
+					private readonly IMapper _mapper;
+
+					// cria o construtor para a inversão de dependência
+					public FornecedoresController(IFornecedorRepository fornecedorRepository, IMapper mapper)
+					{
+						_fornecedorRepository = fornecedorRepository;
+						_mapper = mapper;
+					}
+
+					// Retorna uma lista de fornecedores
+					public async Task<ActionResult<IEnumerable<FornecedorViewModel>>> ObterTodos()
+					{
+						// Seta um mapeamento (_mapper.Map) de uma lista (IEnumerable<FornecedorViewModel>), recebida de (await _fornecedorRepository.ObterTodos()).
+						var fornecedor = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos()); // Lembre-se: recebeu uma lista, mapea uma lista
+
+						// Retorna um código 200 com o ActionResult de fornecedor
+						return Ok(fornecedor); // 
+					}
+				}
+			}
+				
+		4.6) Resolvendo problemas de dependências:
+
+			4.6.1) Na pasta "Configurations" crie uma classe chamada: "DependencyInjectionConfig.cs" e cole o código abaixo dentro dela:
+
+				using DevIO.Business.Intefaces;
+				using DevIO.Data.Context;
+				using DevIO.Data.Repository;
+				using Microsoft.Extensions.DependencyInjection;
+
+				namespace DevIO.Api.Configurations
+				{
+					public static class DependencyInjectionConfig
+					{
+						// Método de extensão para o IServiceCollection
+						public static IServiceCollection ResolveDependencies(this IServiceCollection services)
+						{
+							// Adiciona o contexto ao escopo
+							services.AddScoped<MeuDbContext>();
+
+							// Adiciona o repositório do fornecedor escopo
+							services.AddScoped<IFornecedorRepository, FornecedorRepository>();
+
+							// retorna todos os serviços
+							return services;
+						}
+
+					}
+				}
+
+			4.6.1) Abra a classe "Startup.cs" e adicione o código abaixo, no final do método "ConfigureServices":
+
+				// Resolve os problemas de dependência
+				services.ResolveDependencies();
+
+		4.7) Configurando o MeuDbContext
+
+			4.7.1) Abra o arquivo "appsettings.json" da pasta "Raiz" da aplicação e adicione o código:
+
+				Logo abaixo dê: "AllowedHosts": "*", não esqueça de adicionar um virgula em ("*",). 
+
+				  "ConnectionStrings": {
+						"DefaultConnection": "Server=ALEDESKTOP;Database=MinhaApiCore2;Trusted_Connection=True;MultipleActiveResultSets=true"
+					}
+
+			4.7.2) Abra a classe "Startup" na raiz da aplicação e adicione o código abaxio dentro do método "ConfigureServices" logo no começo.
+
+				// Inicia o "MeuDbContext"
+				services.AddDbContext<MeuDbContext>(optionsAction: options =>
+				{
+					options.UseSqlServer(Configuration.GetConnectionString(name: "DefaultConnection"));
+				});
+
+			4.7.3) Caso o VS fique com frescura, vá até o "Console do Gerenciador de Pacotes" e instale os packages abaixo para no projeto que você está trabalhando:
+
+				Install-Package Microsoft.EntityFrameworkCore
+				Install-Package Microsoft.EntityFrameworkCore.SqlServer
+				Install-Package Microsoft.EntityFrameworkCore.Tools
+
+				Install-Package Microsoft.EntityFrameworkCore -Version 2.2.6
+				Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 2.2.6
+				Install-Package Microsoft.EntityFrameworkCore.Tools -Version 2.2.6
+
+			4.7.4) No "Console do Gerenciador de Pacotes", altere o projeto padrão para o "DevIO.Data" e execute o comando abaixo para o EntityFramwork atualizar o banco.
+
+				update-database -verbose

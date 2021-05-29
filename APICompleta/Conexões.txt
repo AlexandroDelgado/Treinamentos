@@ -1,0 +1,15 @@
+	
+													STRINGS DE CONEXÃO COM A AS BASES DE DADOS NO DESKTOP
+
+	1) WEB CONFIG:
+
+		  <connectionStrings>
+			<!--<add name="DefaultConnection" connectionString="Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AppFuncional.mdf;Initial Catalog=AppFuncional;Integrated Security=True" providerName="System.Data.SqlClient" />-->
+			<add name="DefaultConnection" connectionString="Data Source=ALEDESKTOP;AttachDbFilename=|DataDirectory|\AppFuncional.mdf;Initial Catalog=AppFuncional;Integrated Security=True" providerName="System.Data.SqlClient" />
+		  </connectionStrings>
+
+	2) appsettings.json
+		 "ConnectionStrings": {
+			"DefaultConection": "Server=ALEDESKTOP;Database=MinhaApiCore;Trusted_Connection=True;MultipleActiveResultSets=true"
+		  }
+		 
