@@ -353,3 +353,13 @@
 			4.7.4) No "Console do Gerenciador de Pacotes", altere o projeto padrão para o "DevIO.Data" e execute o comando abaixo para o EntityFramwork atualizar o banco.
 
 				update-database -verbose
+
+			4.7.5) Teste a aplicação:
+
+				A mesma subirá com erro, então informe o link abaixo:
+
+				https://localhost:44338/api/fornecedores
+
+				Caso a pagina abra com "[]" ok, está funcionando corretamente.
+
+		5) 

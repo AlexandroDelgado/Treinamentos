@@ -2,6 +2,7 @@
 using DevIO.Api.ViewModel;
 using DevIO.Business.Intefaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,10 +23,24 @@ namespace DevIO.Api.Controllers
         }
 
         // Retorna uma lista de fornecedores
+        [HttpGet] // Verbo do método
         public async Task<ActionResult<IEnumerable<FornecedorViewModel>>> ObterTodos()
         {
             // Seta um mapeamento (_mapper.Map) de uma lista (IEnumerable<FornecedorViewModel>), recebida de (await _fornecedorRepository.ObterTodos()).
             var fornecedor = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos()); // Lembre-se: recebeu uma lista, mapea uma lista
+
+            // Retorna um código 200 com o ActionResult de fornecedor
+            return Ok(fornecedor); // 
+        }
+
+        // Retorna o fornecedor por Id
+        [HttpGet("{id:guid")]
+        public async Task<ActionResult<FornecedorViewModel>> ObterPorId(Guid id)
+        {
+
+            var fornecedor = _mapper.Map<FornecedorViewModel>(await _fornecedorRepository.ObterFornecedorProdutosEndereco(id));
+
+            if (fornecedor == null) return NotFound(); // Não encontrado
 
             // Retorna um código 200 com o ActionResult de fornecedor
             return Ok(fornecedor); // 
