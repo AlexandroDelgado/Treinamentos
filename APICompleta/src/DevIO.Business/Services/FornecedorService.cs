@@ -56,22 +56,30 @@ namespace DevIO.Business.Services
             await _enderecoRepository.Atualizar(endereco);
         }
 
+        // método para a exclusão de um fornecedor
         public async Task<bool> Remover(Guid id)
         {
+            // Verifica se o fornecedor possui algum produto cadastrado
             if (_fornecedorRepository.ObterFornecedorProdutosEndereco(id).Result.Produtos.Any())
             {
                 Notificar("O fornecedor possui produtos cadastrados!");
                 return false;
             }
 
+            // Seta o endereço do fornecedor
             var endereco = await _enderecoRepository.ObterEnderecoPorFornecedor(id);
 
+            // Caso o endereço exista
             if (endereco != null)
             {
+                // remove o endereço do fornecedor
                 await _enderecoRepository.Remover(endereco.Id);
             }
 
+            // remove o fornecedor
             await _fornecedorRepository.Remover(id);
+
+            // Retorna removido
             return true;
         }
 
