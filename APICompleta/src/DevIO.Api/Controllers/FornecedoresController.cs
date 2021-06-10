@@ -36,7 +36,7 @@ namespace DevIO.Api.Controllers
             return Ok(fornecedor); // 
         }
 
-        [HttpGet("{id:guid")] // Criando a rota (Verbo) para o fornecedor por id.
+        [HttpGet("{id:guid}")] // Criando a rota (Verbo) para o fornecedor por id.
         // Retorna o fornecedor por Id
         public async Task<ActionResult<FornecedorViewModel>> ObterPorId(Guid id)
         {
@@ -58,7 +58,7 @@ namespace DevIO.Api.Controllers
             return _mapper.Map<FornecedorViewModel>(await _fornecedorRepository.ObterFornecedorProdutosEndereco(id));
         }
 
-        [HttpGet("{id:guid")] // Criando a rota (Verbo) para o fornecedor por id.
+        [HttpGet("{id:guid}")] // Criando a rota (Verbo) para o fornecedor por id.
         // Retornando o fornecedor po Id
         public async Task<ActionResult<FornecedorViewModel>> ObterPorIdEncapsulado(Guid id)
         {

@@ -3,6 +3,7 @@ using DevIO.Api.Configurations;
 using DevIO.Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,13 @@ namespace DevIO.Api
             services.AddAutoMapper(typeof(Startup));
 
             services.AddControllers();
+
+            // Configurando os serviços automáticos
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                // Desativa a validação automática da API
+                options.SuppressModelStateInvalidFilter = true;
+            });
 
             // Resolve os problemas de dependência
             services.ResolveDependencies();
